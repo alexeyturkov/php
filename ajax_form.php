@@ -1,9 +1,9 @@
 <?php
 
-$filename = "reg.txt"; 
+$filename = "reg.txt";   // Файл, куда записывается информация о пользователе (все поля из формы)
 $arr = file($filename);
 
-$filename1 = "log.txt"; 
+$filename1 = "log.txt";   // Сюда пишется результат регистрации (success/error) с указанием даты и времени
 $date = date("d.m.Y H:i:s");
 $log = fopen($filename1, "a");
 
@@ -17,7 +17,7 @@ if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['surname']) 
     $log = fopen($filename1, "a");
     fwrite($log, $date."  error\r\n");
     fclose($log);
-} elseif (($_POST['psw'] != $_POST['rpsw'])) {
+} elseif (($_POST['psw'] != $_POST['rpsw'])) {    // Проверка на совпадение паролей
       $result = array(
        "name" => "Регистрация не завершена",
        "email" => "Пароли должны совпадать"
@@ -28,7 +28,7 @@ if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['surname']) 
 
 else { 
   
-  if(!preg_match("|^[0-9a-z_-]+@[0-9a-z_^\.]+\.[a-z]{2,6}$|i", $_POST['email']))
+  if(!preg_match("|^[0-9a-z_-]+@[0-9a-z_^\.]+\.[a-z]{2,6}$|i", $_POST['email']))   // Проверка на правильность заполнение формы "Почта"
     {
       $result = array(
        "name" => "Регистрация не завершена",
@@ -44,7 +44,7 @@ else {
           $temp[] = $data[3];
         }  
        
-      if(in_array($_POST['email'], $temp)) {
+      if(in_array($_POST['email'], $temp)) {    // Проверка на совпадение email'а (Сверяет с reg.txt) 
    
            $result = array(
            "name" => "Данный email уже зарегистрирован",
@@ -53,7 +53,7 @@ else {
     
     fwrite($log, $date."  error\r\n");
     fclose($log);
-       } else {
+       } else {                                // Запись информации в файл
    
               $fd = fopen($filename, "a");
               $str = $_POST['name']."::".
@@ -75,6 +75,6 @@ else {
 }
 }
 } 
- echo json_encode($result); 
+ echo json_encode($result);                   
 
 ?>
